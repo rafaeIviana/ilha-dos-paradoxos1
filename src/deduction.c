@@ -44,7 +44,7 @@ static const ValidCombo VALID_COMBOS[] = {
 static const int VALID_COMBO_COUNT = 6;
 
 // Nomes dos operadores para exibição na interface
-static const char* OP_SYMBOLS[] = { "∧", "∨", "→", "¬" };
+static const char* OP_SYMBOLS[] = { "∧", "∨", "->", "¬" };
 
 // =============================================================
 // TryManualDeduction — tenta realizar a dedução escolhida pelo jogador
