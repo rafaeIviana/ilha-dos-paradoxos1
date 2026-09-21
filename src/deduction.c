@@ -175,9 +175,9 @@ void CheckPuzzleSolution(GameState* g) {
 // por DedQuizUpdate (após o jogador responder corretamente ao quiz).
 void ApplyDeductionResult(GameState* g, const char* result, int ded_idx, int clue_ci) {
     // Desbloqueia a dedução no caderno
-    if (ded_idx >= 0 && ded_idx < g->deduction_count) {
-        if (!g->deductions[ded_idx].unlocked)
-            g->deductions[ded_idx].unlocked = true;
+    // MELHORIA LOGICA: (A ^ B) ^ C equivale a A ^ B ^ C (associatividade)
+    if (ded_idx >= 0 && ded_idx < g->deduction_count && !g->deductions[ded_idx].unlocked) {
+        g->deductions[ded_idx].unlocked = true;
     }
     // Confirma a pista de conclusão
     if (clue_ci >= 0 && clue_ci < g->clue_count)

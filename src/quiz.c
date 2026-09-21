@@ -43,7 +43,9 @@ static void DrawOptionButton(int x, int y, int w, int h,
         border = COL_UI_GREEN;
         tc     = COL_UI_GREEN;
     }
-    if (answered && wrong && selected) {
+    // MELHORIA LOGICA: subexpressao nomeada uma unica vez (idempotencia: W ^ W = W)
+    bool show_wrong_feedback = answered && wrong && selected;
+    if (show_wrong_feedback) {
         float p = 0.7f + 0.3f*sinf(t*8.0f);
         bg     = (Color){(unsigned char)(80*p),10,10,230};
         border = COL_UI_RED;
@@ -59,7 +61,7 @@ static void DrawOptionButton(int x, int y, int w, int h,
     DrawText(text, tx, ty_txt, font_sz, tc);
 
     if (answered && correct) DrawText(" ✓", x + w - 26, ty_txt, font_sz, COL_UI_GREEN);
-    if (answered && wrong && selected) DrawText(" ✗", x + w - 26, ty_txt, font_sz, COL_UI_RED);
+    if (show_wrong_feedback) DrawText(" ✗", x + w - 26, ty_txt, font_sz, COL_UI_RED);
 }
 
 // ================================================================
@@ -152,8 +154,8 @@ void NpcQuizUpdate(GameState* g) {
                 int cid = g->npc_quiz_pending_clue;
                 if (cid >= 0 && cid < g->clue_count && !g->clues[cid].discovered) {
                     g->clues[cid].discovered = true;
-                    if (cid == 0) g->clues[cid].confirmed = true;
-                    if (cid == 7) g->clues[cid].confirmed = true;
+                    // MELHORIA LOGICA: (P->A) ^ (Q->A) equivale a (P v Q) -> A
+                    if (cid == 0 || cid == 7) g->clues[cid].confirmed = true;
                     char body[256];
                     snprintf(body, 255, "[%s] %s", g->clues[cid].tag, g->clues[cid].text);
                     ShowNotification(g, "PISTA DESCOBERTA", body, g->clues[cid].color);
